@@ -1,4 +1,4 @@
-Click=7.1.2
+Click==7.1.2
 matplotlib==3.3.2
 pandas==1.1.2
 scipy==1.5.2
