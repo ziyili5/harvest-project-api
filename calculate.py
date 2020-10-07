@@ -16,7 +16,7 @@ def cal(rot, fpr, cpr, dis):
                 13: southern Illinois
     :return:
     :yn: all N-yield responses curve under selected districts and rotations(each column represent one N-yield response for one site in one year)
-    :En: recommended Econominc optimum N rate (one value) in under selected districts and rotations
+    :En: Econominc optimum N rates(EONR) under selected districts and rotations(each value representa one EONR for one site in one year)
     :Opy: all optimal yields under selected districts and rotations (each value represent one optimal yield for one site in one year)
     :MRTN_rate: the final recommendation N fertilizer rate(MRTN) at the selected district
     :Ns: sites number of the selected districts
