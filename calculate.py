@@ -18,6 +18,8 @@ def cal(rot, fpr, cpr, dis):
     :yn: all N-yield responses curve under selected districts and rotations(each column represent one N-yield response for one site in one year)
     :En: recommended Econominc optimum N rate (one value) in under selected districts and rotations
     :Opy: all optimal yields under selected districts and rotations (each value represent one optimal yield for one site in one year)
+    :MRTN_rate: the final recommendation N fertilizer rate(MRTN) at the selected district
+    :Ns: sites number of the selected districts
     """
     xn = np.linspace(0, 250, 1000)
     df = pd.read_excel("./data/Final_dis+region.xlsx", sheet_name=f"{rot}_d{dis}",)
@@ -54,5 +56,11 @@ def cal(rot, fpr, cpr, dis):
                     yn[j, i] = B * MaxN + C
         En[i] = xn[np.argmax(yn[:, i], axis=0)]
         Opy[i] = max(yn[:, i])
-    return yn, En, Opy
+    Yc=(yn.mean(axis=1)-yn.mean(axis=1)[0])*cpr#Crop benefits
+    Yf=xn*fpr#Fertilizer cost
+    Yrtn=Yc-Yf #Return to N
+    Ns=yn.shape[1]#number of sites
+    MRTN_rate=xn[np.argmax(Yrtn, axis=0)]
+    
+    return yn,En,Opy,MRTN_rate,Ns
 
