@@ -14,14 +14,12 @@ def fig(tp, yn, cpr, fpr, En, Opy):
                    3: ENOR Frequency
                    4: ENOR vs. Yield
     :param yn: all N-yield responses curve under selected districts and rotations(each column represent one N-yield response for one site in one year)
-    :param cpr: 
-    :param fpr: 
+    :param cpr: corn price $/bu
+    :param fpr: nitrogen fertilizer price $/lb N
     :param En: recommended Econominc optimum N rate (one value) in under selected districts and rotations
     :param Opy: all optimal yields under selected districts and rotations (each value represent one optimal yield for one site in one year)
-    :return:
+    :return: fig() function returns back the corresponding figures selected by param tp
     """
-
-
     xn = np.linspace(0, 250, 1000)
 
     Yc = (yn.mean(axis=1) - yn.mean(axis=1)[0]) * cpr
