@@ -51,3 +51,9 @@ def cal(rot, fpr, cpr, dis):
         En[i] = xn[np.argmax(yn[:, i], axis=0)]
         Opy[i] = max(yn[:, i])
     return yn, En, Opy
+    """
+    Return values for cal() funcrion
+    :yn: all N-yield responses curve under selected districts and rotations(each column represent one N-yield response for one site in one year)
+    :En: recommended Econominc optimum N rate (one value) in under selected districts and rotations
+    :Opy: all optimal yields under selected districts and rotations (each value represent one optimal yield for one site in one year)
+    """
