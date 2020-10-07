@@ -13,13 +13,14 @@ def fig(tp, yn, cpr, fpr, En, Opy):
                    2: % of Max Yield
                    3: ENOR Frequency
                    4: ENOR vs. Yield
-    :param yn:
-    :param cpr:
-    :param fpr:
-    :param En:
-    :param Opy:
+    :param yn: all N-yield responses curve under selected districts and rotations(each column represent one N-yield response for one site in one year)
+    :param cpr: 
+    :param fpr: 
+    :param En: recommended Econominc optimum N rate (one value) in under selected districts and rotations
+    :param Opy: all optimal yields under selected districts and rotations (each value represent one optimal yield for one site in one year)
     :return:
     """
+
 
     xn = np.linspace(0, 250, 1000)
 
