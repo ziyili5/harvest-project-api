@@ -82,10 +82,3 @@ def fit(x, y):
         p = p_qp
     return Fit_type, p
 
-"""
-# test
-x = np.array([35, 85, 135, 185, 235, 285])
-y = np.array([161.334, 219.389, 255.9, 265.621, 278.649, 283.925])
-Par = fit(x, y)
-"""
-
