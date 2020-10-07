@@ -4,9 +4,15 @@ from scipy.optimize import curve_fit  # we could import more, but this is what w
 from scipy.optimize import leastsq
 from scipy.stats import pearsonr
 
-
-# three different fitting methods
-# linear fitting
+"""
+Fit the parameters of N-yield feild experiment data for one specific site in one year
+:lin(x, y): linear fitting
+:q(x,y): quandratic fitting
+:qp(x,y): quandratic-plateau fitting
+:param x: fertilizer rate experiment data
+:param y: corresponding corn yield experiment data
+"""
+    
 def lin(x, y):
     def Fun(p, x):  # define the fitting function
         a, b = p
@@ -20,13 +26,12 @@ def lin(x, y):
     return para[0]
 
 
-# quandratic fitting
 def q(x, y):
-    def Fq(p, x):  # 定义拟合函数形式
+    def Fq(p, x):
         a, b, c = p
         return a * x ** 2 + b * x + c
 
-    def error(p, x, y):  # 拟合残差
+    def error(p, x, y): 
         return Fq(p, x) - y
 
     p0 = [-0.002, 0.65, 80]
@@ -34,7 +39,6 @@ def q(x, y):
     return para[0]
 
 
-# quandratic-plateau fitting
 def qp(x, y):
     def Fqp(x, a, b, c):
         x0 = -1 * b / (2 * a)
@@ -49,7 +53,6 @@ def qp(x, y):
     return p
 
 
-# define the fitting method
 def fit(x, y):
     p_lin = lin(x, y)
     y_lin = x * p_lin[0] + p_lin[1]
@@ -79,16 +82,10 @@ def fit(x, y):
         p = p_qp
     return Fit_type, p
 
-
+"""
 # test
 x = np.array([35, 85, 135, 185, 235, 285])
 y = np.array([161.334, 219.389, 255.9, 265.621, 278.649, 283.925])
 Par = fit(x, y)
-
 """
 
-xd = np.linspace(0, 300, 100)
-plt.plot(x, y, "o")
-plt.plot(xd, p[0]*xd**2+p[1]*xd+p[2])
-print(p)
-"""
