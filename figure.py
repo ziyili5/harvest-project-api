@@ -4,7 +4,7 @@ import pandas as pd
 import seaborn as sns
 
 
-def fig(tp, yn, cpr, fpr, En, Opy):
+def fig(tp,yn,En,Opy,cpr,fpr):
     """
     Draw the corresponding figures.
     See the following for more info in different figure types: http://cnrc.agron.iastate.edu/nRate.aspx
@@ -16,17 +16,14 @@ def fig(tp, yn, cpr, fpr, En, Opy):
     :param yn: all N-yield responses curve under selected districts and rotations(each column represent one N-yield response for one site in one year)
     :param cpr: corn price $/bu
     :param fpr: nitrogen fertilizer price $/lb N
-    :param En: recommended Econominc optimum N rate (one value) in under selected districts and rotations
-    :param Opy: all optimal yields under selected districts and rotations (each value represent one optimal yield for one site in one year)
+    :param En: Econominc optimum N rates(EONR) under selected districts and rotations(each value representa one EONR for one site in one year)
+    :param Opy: Optimal yields under selected districts and rotations (each value represent one optimal yield for one site in one year)
     :return: fig() function returns back the corresponding figures selected by param tp
     """
     xn = np.linspace(0, 250, 1000)
-
     Yc = (yn.mean(axis=1) - yn.mean(axis=1)[0]) * cpr
-
     Yf = xn * fpr
     Yrtn = Yc - Yf
-
     A = np.where(Yrtn >= np.percentile(Yrtn, 98))
     Xmin = min(A[0])
     Xmax = max(A[0])
