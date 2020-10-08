@@ -1,3 +1,5 @@
+import json
+
 import click
 
 from calculate import cal
@@ -25,9 +27,11 @@ from figure import fig
         \t10-13 northern, lsw region, central, and southern Illinois
         """,
 )
+@click.option("--output", default="std", help="std, json, plot")
+@click.option("--filename", default="results.json", help="The filename for json output")
 @click.option(
     "--plot",
-    default=0,
+    default=1,
     help="""
         figure type:\n
         \t0: No plot\n
@@ -37,11 +41,25 @@ from figure import fig
         \t4: ENOR vs. Yield
         """,
 )
-def run(rot, fpr, cpr, dis, plot):
-    (yn, En, Opy) = cal(rot, fpr, cpr, dis)
-    print(yn, En, Opy)
-    if plot:
-        fig(plot, yn, cpr, fpr, En, Opy)
+def run(rot, fpr, cpr, dis, plot, output, filename):
+    (yn, En, Opy, MRTN_rate, Ns) = cal(rot, fpr, cpr, dis)
+    if output == "std":
+        print(yn, En, Opy, MRTN_rate, Ns)
+    elif output == "json":
+        with open(filename, "w") as f:
+            f.write(
+                json.dumps(
+                    {
+                        "yn": yn.tolist(),
+                        "En": En,
+                        "Opy": Opy,
+                        "MRTN_rate": MRTN_rate,
+                        "Ns": Ns,
+                    }
+                )
+            )
+    elif output == "plot":
+        fig(plot, yn, En, Opy, cpr, fpr)
 
 
 if __name__ == "__main__":

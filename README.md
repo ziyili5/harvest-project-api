@@ -9,12 +9,24 @@ This is the code for building N recommendation website.
 
 ## How to use
 
-> Requires python 3
+> Requires python 3.8
 
 - Install the dependencies by running `pip install -r requirements.txt`.
 - If you are going to contribute code, install the dev dependencies (`pip install -r requirements-dev.txt`)
   and then run `pre-commit install`.
 - Run `python main.py --help` to see a list of arguments for the cli.
+
+## Example usage through cli
+
+The following saves the results of the calculation to a json file named `results.json`:
+
+> `python main.py --fpr .4 --rot cs --cpr 4 --dis 1 --output json --filename results.json`
+
+- fpr: nitrogen fertilizer price
+- rot: rotation
+- cpr: corn price
+- dis: district
+
 
 ## About the return values
 

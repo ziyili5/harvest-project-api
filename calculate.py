@@ -5,7 +5,7 @@ import pandas as pd
 def cal(rot, fpr, cpr, dis):
     """
     Calculate the MRTN results and give input (fertilizer and corn price, rotation and district)
-    :param rot: rotation -  one of cc (continuous corn) and cs (corn-soybean rotation)
+    :param rot: rotation - one of cc (continuous corn) and cs (corn-soybean rotation)
     :param fpr: nitrogen fertilizer price $/lb N
     :param cpr: corn price $/bu
     :param dis: district - a value from 1 to 13.
@@ -15,12 +15,12 @@ def cal(rot, fpr, cpr, dis):
                 12: central
                 13: southern Illinois
     :return:
-    :yn: all N-yield responses curve under selected districts and rotations(each column represent one N-yield response
-         for one site in one year)
-    :En: Economic optimum N rates(EONR) under selected districts and rotations (each value represents one EONR for one
-         site in one year)
-    :Opy: all optimal yields under selected districts and rotations (each value represent one optimal yield for one
-          site in one year)
+    :yn: all N-yield responses curve under selected districts and rotations
+             (each column represent one N-yield response for one site in one year)
+    :En: Economic optimum N rates (EONR) under selected districts and rotations
+         (each value represents one EONR for one site in one year)
+    :Opy: all optimal yields under selected districts and rotations
+          (each value represent one optimal yield for one site in one year)
     :MRTN_rate: the final recommendation N fertilizer rate (MRTN) at the selected district
     :Ns: sites number of the selected districts
     """
