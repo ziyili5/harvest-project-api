@@ -25,4 +25,3 @@ This part is related to the final results display in the websites
 - '% of Max Yield' is the proportion of yield that might be produced at the MRTN rate compared to the yield at the maximum response to N
 - 'EONR Frequency' is the frequency distribution, in 25 lb N increments, of the EONR for each site in the dataset and rotation chosen.
 - 'EONR vs. Yield' is the relationship between the site EONR and yield at the EONR for each site in the dataset and rotation chosen.
-

@@ -15,10 +15,13 @@ def cal(rot, fpr, cpr, dis):
                 12: central
                 13: southern Illinois
     :return:
-    :yn: all N-yield responses curve under selected districts and rotations(each column represent one N-yield response for one site in one year)
-    :En: Econominc optimum N rates(EONR) under selected districts and rotations(each value representa one EONR for one site in one year)
-    :Opy: all optimal yields under selected districts and rotations (each value represent one optimal yield for one site in one year)
-    :MRTN_rate: the final recommendation N fertilizer rate(MRTN) at the selected district
+    :yn: all N-yield responses curve under selected districts and rotations(each column represent one N-yield response
+         for one site in one year)
+    :En: Economic optimum N rates(EONR) under selected districts and rotations (each value represents one EONR for one
+         site in one year)
+    :Opy: all optimal yields under selected districts and rotations (each value represent one optimal yield for one
+          site in one year)
+    :MRTN_rate: the final recommendation N fertilizer rate (MRTN) at the selected district
     :Ns: sites number of the selected districts
     """
     xn = np.linspace(0, 250, 1000)
@@ -56,11 +59,10 @@ def cal(rot, fpr, cpr, dis):
                     yn[j, i] = B * MaxN + C
         En[i] = xn[np.argmax(yn[:, i], axis=0)]
         Opy[i] = max(yn[:, i])
-    Yc=(yn.mean(axis=1)-yn.mean(axis=1)[0])*cpr#Crop benefits
-    Yf=xn*fpr#Fertilizer cost
-    Yrtn=Yc-Yf #Return to N
-    Ns=yn.shape[1]#number of sites
-    MRTN_rate=xn[np.argmax(Yrtn, axis=0)]
-    
-    return yn,En,Opy,MRTN_rate,Ns
+    Yc = (yn.mean(axis=1) - yn.mean(axis=1)[0]) * cpr  # Crop benefits
+    Yf = xn * fpr  # Fertilizer cost
+    Yrtn = Yc - Yf  # Return to N
+    Ns = yn.shape[1]  # number of sites
+    MRTN_rate = xn[np.argmax(Yrtn, axis=0)]
 
+    return yn, En, Opy, MRTN_rate, Ns

@@ -12,7 +12,8 @@ Fit the parameters of N-yield feild experiment data for one specific site in one
 :param x: fertilizer rate experiment data
 :param y: corresponding corn yield experiment data
 """
-    
+
+
 def lin(x, y):
     def Fun(p, x):  # define the fitting function
         a, b = p
@@ -31,7 +32,7 @@ def q(x, y):
         a, b, c = p
         return a * x ** 2 + b * x + c
 
-    def error(p, x, y): 
+    def error(p, x, y):
         return Fq(p, x) - y
 
     p0 = [-0.002, 0.65, 80]
@@ -81,4 +82,3 @@ def fit(x, y):
         Fit_type = "QP"
         p = p_qp
     return Fit_type, p
-
