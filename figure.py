@@ -4,7 +4,7 @@ import pandas as pd
 import seaborn as sns
 
 
-def fig(tp, yn, En, Opy, cpr, fpr):
+def fig(tp, yn, En, Opy, cpr, fpr, Rg_min, Rg_max):
     """
     Draw the corresponding figures.
     See the following for more info in different figure types: http://cnrc.agron.iastate.edu/nRate.aspx
@@ -21,15 +21,16 @@ def fig(tp, yn, En, Opy, cpr, fpr):
                (each value represents one EONR for one site in one year)
     :param Opy: Optimal yields under selected districts and rotations
                 (each value represent one optimal yield for one site in one year)
+    :Rg_min and Rg_max: Profitable N Rate Range
     :return: the corresponding figures selected by param tp
     """
     xn = np.linspace(0, 250, 1000)
     Yc = (yn.mean(axis=1) - yn.mean(axis=1)[0]) * cpr
     Yf = xn * fpr
     Yrtn = Yc - Yf
-    A = np.where(Yrtn >= np.percentile(Yrtn, 98))
-    Xmin = min(A[0])
-    Xmax = max(A[0])
+    #A = np.where(Yrtn >= np.percentile(Yrtn, 98))
+    #Xmin = min(A[0])
+    #Xmax = max(A[0])
 
     if tp == 1:
         # Return to N
@@ -39,15 +40,12 @@ def fig(tp, yn, En, Opy, cpr, fpr):
         plt.plot(xn, Yrtn, "r", label="Net Return")
 
         plt.fill_between(
-            xn[A[0]],
+            [Rg_min,Rg_max],
             0,
             600,
             facecolor="cyan",
             alpha=0.3,
-            label="Profitable N Rate Range(98%) "
-            + str(round(xn[Xmin], 2))
-            + "-"
-            + str(round(xn[Xmax], 2)),
+            label="Profitable N Rate Range"
         )
 
         MRTN = xn[np.argmax(Yrtn, axis=0)]
@@ -63,7 +61,7 @@ def fig(tp, yn, En, Opy, cpr, fpr):
         )
 
         plt.xlim(0, 250)
-        plt.ylim(0, 600)
+        plt.ylim(0, max(Yc)+100)
         plt.grid()
         plt.xlabel("Nitrogen rate(lb/acre)", fontsize=20)
         plt.ylabel("Benefits ($/acre)", fontsize=20)
@@ -80,15 +78,12 @@ def fig(tp, yn, En, Opy, cpr, fpr):
         plt.plot(xn, Ypmy, "b", label="Yield Return")
 
         plt.fill_between(
-            xn[A[0]],
+            [Rg_min,Rg_max],
             0,
             110,
             facecolor="cyan",
             alpha=0.3,
-            label="Profitable N Rate Range(98%) "
-            + str(round(xn[Xmin], 2))
-            + "-"
-            + str(round(xn[Xmax], 2)),
+            label="Profitable N Rate Range"
         )
 
         plt.xlim(0, 250)
