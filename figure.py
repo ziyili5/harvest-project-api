@@ -4,6 +4,25 @@ import pandas as pd
 import seaborn as sns
 
 
+def get_plot_data(yn, fpr, cpr):
+    """
+    :param yn: all N-yield responses curve under selected districts and rotations
+               (each column represent one N-yield response for one site in one year)
+    :param cpr: corn price $/bu
+    :param fpr: nitrogen fertilizer price $/lb N
+    :return:
+    """
+    xn = np.linspace(0, 250, 1000)
+    Yc = (yn.mean(axis=1) - yn.mean(axis=1)[0]) * cpr
+    Yf = xn * fpr
+    Yrtn = Yc - Yf
+    Ypmy = yn.mean(axis=1) * 100 / max(yn.mean(axis=1))
+    A = np.where(Yrtn >= np.percentile(Yrtn, 98))
+    Xmin = min(A[0])
+    Xmax = max(A[0])
+    return xn, Yc, Yf, Yrtn, Ypmy, A, Xmin, Xmax
+
+
 def fig(tp, yn, En, Opy, cpr, fpr, Rg_min, Rg_max):
     """
     Draw the corresponding figures.
@@ -24,13 +43,7 @@ def fig(tp, yn, En, Opy, cpr, fpr, Rg_min, Rg_max):
     :Rg_min and Rg_max: Profitable N Rate Range
     :return: the corresponding figures selected by param tp
     """
-    xn = np.linspace(0, 250, 1000)
-    Yc = (yn.mean(axis=1) - yn.mean(axis=1)[0]) * cpr
-    Yf = xn * fpr
-    Yrtn = Yc - Yf
-    #A = np.where(Yrtn >= np.percentile(Yrtn, 98))
-    #Xmin = min(A[0])
-    #Xmax = max(A[0])
+    (xn, Yc, Yf, Yrtn, Ypmy, A, Xmin, Xmax) = get_plot_data(yn, fpr, cpr)
 
     if tp == 1:
         # Return to N
@@ -40,12 +53,12 @@ def fig(tp, yn, En, Opy, cpr, fpr, Rg_min, Rg_max):
         plt.plot(xn, Yrtn, "r", label="Net Return")
 
         plt.fill_between(
-            [Rg_min,Rg_max],
+            [Rg_min, Rg_max],
             0,
             600,
             facecolor="cyan",
             alpha=0.3,
-            label="Profitable N Rate Range"
+            label="Profitable N Rate Range",
         )
 
         MRTN = xn[np.argmax(Yrtn, axis=0)]
@@ -61,7 +74,7 @@ def fig(tp, yn, En, Opy, cpr, fpr, Rg_min, Rg_max):
         )
 
         plt.xlim(0, 250)
-        plt.ylim(0, max(Yc)+100)
+        plt.ylim(0, max(Yc) + 100)
         plt.grid()
         plt.xlabel("Nitrogen rate(lb/acre)", fontsize=20)
         plt.ylabel("Benefits ($/acre)", fontsize=20)
@@ -74,16 +87,15 @@ def fig(tp, yn, En, Opy, cpr, fpr, Rg_min, Rg_max):
         # % of Nax Yield
         plt.figure(figsize=(15, 10))
 
-        Ypmy = yn.mean(axis=1) * 100 / max(yn.mean(axis=1))
         plt.plot(xn, Ypmy, "b", label="Yield Return")
 
         plt.fill_between(
-            [Rg_min,Rg_max],
+            [Rg_min, Rg_max],
             0,
             110,
             facecolor="cyan",
             alpha=0.3,
-            label="Profitable N Rate Range"
+            label="Profitable N Rate Range",
         )
 
         plt.xlim(0, 250)
