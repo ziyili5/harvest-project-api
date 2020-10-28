@@ -28,6 +28,17 @@ from figure import get_plot_data
         \t10-13 northern, lsw region, central, and southern Illinois
         """,
 )
+@click.option(
+    "--fer",
+    required=True,
+    type=str,
+    help="""
+        Anhydrous Ammonia (82%)\n
+        \tUAN（28%)\n
+        \tUAN（32%)\n
+        \tUAN（45%)
+        """,
+)
 @click.option("--output", default="std", help="std, json, plot")
 @click.option("--filename", default="results.json", help="The filename for json output")
 @click.option(
@@ -42,8 +53,10 @@ from figure import get_plot_data
         \t4: ENOR vs. Yield
         """,
 )
-def run(rot, fpr, cpr, dis, plot, output, filename):
-    (yn, En, Opy, MRTN_rate, Ns) = cal(rot, fpr, cpr, dis)
+def run(rot, fpr, cpr, dis, plot, fer, output, filename):
+    (yn, En, Opy, MRTN_rate, Ns, NRN, PMY, Rg_min, Rg_max, FM, FC) = cal(
+        rot, fpr, cpr, dis, fer
+    )
     if output == "std":
         print(yn, En, Opy, MRTN_rate, Ns)
     elif output == "json":
@@ -69,7 +82,7 @@ def run(rot, fpr, cpr, dis, plot, output, filename):
                 )
             )
     elif output == "plot":
-        fig(plot, yn, En, Opy, cpr, fpr)
+        fig(plot, yn, En, Opy, cpr, fpr, Rg_min, Rg_max)
 
 
 if __name__ == "__main__":
