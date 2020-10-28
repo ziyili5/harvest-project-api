@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 
 
-def cal(rot, fpr, cpr, dis):
+def cal(rot, fpr, cpr, dis, fer):
     """
     Calculate the MRTN results and give input (fertilizer and corn price, rotation and district)
     :param rot: rotation - one of cc (continuous corn) and cs (corn-soybean rotation)
@@ -23,6 +23,11 @@ def cal(rot, fpr, cpr, dis):
           (each value represent one optimal yield for one site in one year)
     :MRTN_rate: the final recommendation N fertilizer rate (MRTN) at the selected district
     :Ns: sites number of the selected districts
+    :NRN: Net return to N at MRTN Rate
+    :PMY: % of Maximum Yield at MRTN Rate
+    :Rg_min and Rg_max: Profitable N Rate Range
+    :FM: Fertilizer at MRTN Rate
+    :FC: Fertilizer Cost at MRTN Rate
     """
     xn = np.linspace(0, 250, 1000)
     df = pd.read_excel("./data/Final_dis+region.xlsx", sheet_name=f"{rot}_d{dis}",)
@@ -59,10 +64,27 @@ def cal(rot, fpr, cpr, dis):
                     yn[j, i] = B * MaxN + C
         En[i] = xn[np.argmax(yn[:, i], axis=0)]
         Opy[i] = max(yn[:, i])
-    Yc = (yn.mean(axis=1) - yn.mean(axis=1)[0]) * cpr  # Crop benefits
-    Yf = xn * fpr  # Fertilizer cost
-    Yrtn = Yc - Yf  # Return to N
-    Ns = yn.shape[1]  # number of sites
-    MRTN_rate = xn[np.argmax(Yrtn, axis=0)]
+    Yc=(yn.mean(axis=1)-yn.mean(axis=1)[0])*cpr#Crop benefits
+    Yf=xn*fpr#Fertilizer cost
+    Yrtn=Yc-Yf #Return to N
+    Ns=yn.shape[1]#number of sites
+    
+    MRTN_rate=xn[np.argmax(Yrtn, axis=0)]#MRTN rate
+    NRN=Yrtn[np.argmax(Yrtn, axis=0)]#Net return to N at MRTN Rate
+    Rg_min=min(xn[np.where(Yrtn>= NRN-1)])   #Profitable N rate range
+    Rg_max=max(xn[np.where(Yrtn>= NRN-1)])   #Profitable N rate range
+    PMY=NRN/max(Yc)*100 # % of Maximum Yield at MRTN Rate
+    if fer=='Anhydrous Ammonia (82%)':
+        nt=0.82
+    elif fer=='UAN（28%）':
+        nt=0.28
+    elif fer=='UAN（32%）':
+        nt=0.32
+    elif fer=='UAN （45%）':
+        nt=0.45
+    else:
+        nt=0.21
+    FM=MRTN_rate/nt #Fertilizer amount at MRTN Rate
+    FC=Yf[np.argmax(Yrtn, axis=0)]#Fertilizer cost at MRTN Rate
 
-    return yn, En, Opy, MRTN_rate, Ns
+    return yn, En, Opy, MRTN_rate, Ns, NRN, PMY, Rg_min, Rg_max, FM, FC
