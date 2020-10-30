@@ -1,13 +1,26 @@
 version: "3.5"
 
 services:
-  # DataWolf application
+  geoserver:
+    image: kartoza/geoserver
+    environment:
+      - GEOSERVER_ADMIN_PASSWORD=${GEOSERVER_ADMIN_PASSWORD}
+      - GEOSERVER_ADMIN_USER=${GEOSERVER_ADMIN_USER}
+    networks:
+      - harvest
+    ports:
+      - 8600:8080
+    volumes:
+      - ./geoserver/data:/opt/geoserver/data_dir
+    restart: unless-stopped
+
   datawolf:
     build:
       context: .
       dockerfile: datawolf/Dockerfile
     volumes:
       - datawolf:/home/datawolf/data
+      - ./n_advisor:/mnt/n_advisor
     depends_on:
       - postgres
     restart: unless-stopped
@@ -30,7 +43,7 @@ services:
     ports:
       - 8888:8888
     networks:
-      - datawolf
+      - harvest
 
   postgres:
     image: postgres:9.6
@@ -39,7 +52,7 @@ services:
       POSTGRES_USER: ${DB_USER:-datawolf}
       POSTGRES_PASSWORD: ${DB_PASSWORD:-datawolf}
     networks:
-      - datawolf
+      - harvest
     volumes:
       - postgres:/var/lib/postgresql/data
     ports:
@@ -50,4 +63,4 @@ volumes:
   datawolf:
 
 networks:
-  datawolf:
+  harvest:

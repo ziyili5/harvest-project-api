@@ -1,7 +1,6 @@
 import json
 
 import click
-
 from calculate import cal
 from figure import fig
 from figure import get_plot_data
@@ -31,12 +30,13 @@ from figure import get_plot_data
 @click.option(
     "--fer",
     required=True,
-    type=str,
+    type=int,
     help="""
-        Anhydrous Ammonia (82%)\n
-        \tUAN（28%)\n
-        \tUAN（32%)\n
-        \tUAN（45%)
+        Fertilizer category:\n
+        \t1: Anhydrous Ammonia (82%)\n
+        \t2: UAN (28%)\n
+        \t3: UAN (32%)\n
+        \t4: UAN (45%)
         """,
 )
 @click.option("--output", default="std", help="std, json, plot")
