@@ -40,7 +40,7 @@ from figure import get_plot_data
         """,
 )
 @click.option("--output", default="std", help="std, json, plot")
-@click.option("--filename", default="results.json", help="The filename for json output")
+@click.option("--filename", default="", help="The filename for json output")
 @click.option(
     "--plot",
     default=1,
@@ -61,26 +61,28 @@ def run(rot, fpr, cpr, dis, plot, fer, output, filename):
         print(yn, En, Opy, MRTN_rate, Ns)
     elif output == "json":
         (xn, Yc, Yf, Yrtn, Ypmy, A, Xmin, Xmax) = get_plot_data(yn, fpr, cpr)
-        with open(filename, "w") as f:
-            f.write(
-                json.dumps(
-                    {
-                        "yn": yn.tolist(),
-                        "En": En,
-                        "Opy": Opy,
-                        "MRTN_rate": MRTN_rate,
-                        "Ns": Ns,
-                        "xn": xn.tolist(),
-                        "Yc": Yc.tolist(),
-                        "Yf": Yf.tolist(),
-                        "Yrtn": Yrtn.tolist(),
-                        "Ypmy": Ypmy.tolist(),
-                        "A": A[0].tolist(),
-                        "Xmin": Xmin.tolist(),
-                        "Xmax": Xmax.tolist(),
-                    }
-                )
-            )
+        results = json.dumps(
+            {
+                "yn": yn.tolist(),
+                "En": En,
+                "Opy": Opy,
+                "MRTN_rate": MRTN_rate,
+                "Ns": Ns,
+                "xn": xn.tolist(),
+                "Yc": Yc.tolist(),
+                "Yf": Yf.tolist(),
+                "Yrtn": Yrtn.tolist(),
+                "Ypmy": Ypmy.tolist(),
+                "A": A[0].tolist(),
+                "Xmin": Xmin.tolist(),
+                "Xmax": Xmax.tolist(),
+            }
+        )
+        if filename:
+            with open(filename, "w") as f:
+                f.write(results)
+        else:
+            print(results)
     elif output == "plot":
         fig(plot, yn, En, Opy, cpr, fpr, Rg_min, Rg_max)
 
