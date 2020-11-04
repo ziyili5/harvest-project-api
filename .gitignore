@@ -2,3 +2,4 @@ geoserver/
 venv/
 
 *.pyc
+*.tif

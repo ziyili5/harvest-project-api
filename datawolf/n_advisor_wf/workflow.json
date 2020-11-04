@@ -1,0 +1,226 @@
+{
+  "id": "03e36b31-48a2-4841-ac2e-948ffab02f0c",
+  "deleted": false,
+  "title": "n_advisor_wf",
+  "description": "",
+  "created": "2020-11-02T21:25:57+0000",
+  "creator": {
+    "id": "3f5724dd-f2ea-45bd-8eb7-ba42f62aaa7a",
+    "deleted": false,
+    "firstName": "Kaveh",
+    "lastName": "Karimi",
+    "email": "kaveh@illinois.edu"
+  },
+  "contributors": [],
+  "steps": [
+    {
+      "id": "93a7de26-47ae-475a-d1b9-0f6176095707",
+      "deleted": false,
+      "title": "n_advisor",
+      "creator": {
+        "id": "3f5724dd-f2ea-45bd-8eb7-ba42f62aaa7a",
+        "deleted": false,
+        "firstName": "Kaveh",
+        "lastName": "Karimi",
+        "email": "kaveh@illinois.edu"
+      },
+      "createDate": "2020-11-02T21:25:57+0000",
+      "tool": {
+        "id": "1680923e-19d0-4c64-f2c8-527872c696d2",
+        "deleted": false,
+        "title": "n_advisor",
+        "description": "Nitrogen advisor tool",
+        "version": "1.0",
+        "previousVersion": null,
+        "date": "2020-11-02T21:25:53+0000",
+        "implementation": "{\"commandLineOptions\":[{\"type\":\"PARAMETER\",\"commandline\":true,\"optionId\":\"90e87bfd-a823-44be-89d2-22a1d87ed617\",\"flag\":\"--dis\"},{\"type\":\"PARAMETER\",\"commandline\":true,\"optionId\":\"f15d48f5-329d-429b-a984-c21f79fa43f1\",\"flag\":\"--cpr\"},{\"type\":\"PARAMETER\",\"commandline\":true,\"optionId\":\"102d952f-d05d-4121-adb9-46ec2af31043\",\"flag\":\"--fpr\"},{\"type\":\"PARAMETER\",\"commandline\":true,\"optionId\":\"cfcf09b7-f512-4bf3-aa4f-149d91b05d3c\",\"flag\":\"--rot\"},{\"type\":\"PARAMETER\",\"commandline\":true,\"optionId\":\"0e65671c-576a-4682-b66f-287ba6c7a2f8\",\"flag\":\"--fer\"},{\"type\":\"PARAMETER\",\"commandline\":true,\"optionId\":\"15669be3-412d-403a-81fc-f618d5e68c02\",\"flag\":\"--filename\"},{\"type\":\"DATA\",\"commandline\":false,\"optionId\":\"7f43ef48-92a2-41ce-d5be-5bdee0a984c3\",\"flag\":\"\",\"inputOutput\":\"OUTPUT\",\"filename\":\"results.json\"}],\"env\":{},\"captureStdOut\":\"stdout\",\"captureStdErr\":\"stderr\",\"joinStdOutStdErr\":false,\"executable\":\"run_n_advisor.sh\"}",
+        "creator": {
+          "id": "3f5724dd-f2ea-45bd-8eb7-ba42f62aaa7a",
+          "deleted": false,
+          "firstName": "Kaveh",
+          "lastName": "Karimi",
+          "email": "kaveh@illinois.edu"
+        },
+        "contributors": [],
+        "inputs": [],
+        "outputs": [
+          {
+            "id": "af0e6591-af39-4232-9d7b-eb349590df5e",
+            "deleted": false,
+            "dataId": "stdout",
+            "title": "stdout",
+            "description": "stdout of external tool",
+            "mimeType": "text/plain"
+          },
+          {
+            "id": "cbf5ce37-ae61-48e1-9a3e-8d1c83ffaf95",
+            "deleted": false,
+            "dataId": "stderr",
+            "title": "stderr",
+            "description": "stderr of external tool.",
+            "mimeType": "text/plain"
+          },
+          {
+            "id": "405ce061-a5a6-450b-b8c9-d92239ae9bea",
+            "deleted": false,
+            "dataId": "7f43ef48-92a2-41ce-d5be-5bdee0a984c3",
+            "title": "Results",
+            "description": "",
+            "mimeType": ""
+          }
+        ],
+        "parameters": [
+          {
+            "id": "48c7f964-c1c5-4e70-9405-e2688cf5020d",
+            "deleted": false,
+            "parameterId": "90e87bfd-a823-44be-89d2-22a1d87ed617",
+            "title": "District",
+            "description": "District 1-9",
+            "type": "NUMBER",
+            "value": "",
+            "hidden": false,
+            "allowNull": false,
+            "options": []
+          },
+          {
+            "id": "d4939a8b-fdaf-45f2-b2b0-9f33a20ff090",
+            "deleted": false,
+            "parameterId": "f15d48f5-329d-429b-a984-c21f79fa43f1",
+            "title": "Corn price",
+            "description": "corn price $/bu",
+            "type": "NUMBER",
+            "value": "",
+            "hidden": false,
+            "allowNull": false,
+            "options": []
+          },
+          {
+            "id": "1fe74ffe-f9d6-4b99-b35c-f2d556604369",
+            "deleted": false,
+            "parameterId": "102d952f-d05d-4121-adb9-46ec2af31043",
+            "title": "N fertilizer price",
+            "description": "nitrogen fertilizer price $/lb N",
+            "type": "NUMBER",
+            "value": "",
+            "hidden": false,
+            "allowNull": false,
+            "options": []
+          },
+          {
+            "id": "0fb3768e-9b97-410c-bfd3-254bf012e242",
+            "deleted": false,
+            "parameterId": "cfcf09b7-f512-4bf3-aa4f-149d91b05d3c",
+            "title": "Crop Rotation",
+            "description": "rotation cc:continuous corn; cs:corn-soybean rotation",
+            "type": "STRING",
+            "value": "",
+            "hidden": false,
+            "allowNull": false,
+            "options": []
+          },
+          {
+            "id": "7d0f3881-9588-4255-8e6a-6208eab5d25e",
+            "deleted": false,
+            "parameterId": "0e65671c-576a-4682-b66f-287ba6c7a2f8",
+            "title": "Fertilizer category",
+            "description": "Category 1-4",
+            "type": "NUMBER",
+            "value": "",
+            "hidden": false,
+            "allowNull": false,
+            "options": []
+          },
+          {
+            "id": "4133e143-5fa5-410c-cc69-4be90c002742",
+            "deleted": false,
+            "parameterId": "15669be3-412d-403a-81fc-f618d5e68c02",
+            "title": "Results",
+            "description": "",
+            "type": "STRING",
+            "value": "results.json",
+            "hidden": true,
+            "allowNull": false,
+            "options": []
+          }
+        ],
+        "executor": "commandline",
+        "blobs": [
+          {
+            "id": "dc42307d-4f74-4796-a8a6-12f42d420568",
+            "deleted": false,
+            "filename": "calculate.py",
+            "mimeType": "text/x-python-script",
+            "size": 3668,
+            "dataURL": "file:/home/datawolf/data/files/dc/42/30/dc42307d-4f74-4796-a8a6-12f42d420568/calculate.py",
+            "md5sum": null
+          },
+          {
+            "id": "cb872f20-8f20-4470-d6e5-66fca5d2e994",
+            "deleted": false,
+            "filename": "run_n_advisor.sh",
+            "mimeType": "application/x-sh",
+            "size": 176,
+            "dataURL": "file:/home/datawolf/data/files/cb/87/2f/cb872f20-8f20-4470-d6e5-66fca5d2e994/run_n_advisor.sh",
+            "md5sum": null
+          },
+          {
+            "id": "6ffbd83d-6fae-43b5-99a7-931c070ca9de",
+            "deleted": false,
+            "filename": "figure.py",
+            "mimeType": "text/x-python-script",
+            "size": 5093,
+            "dataURL": "file:/home/datawolf/data/files/6f/fb/d8/6ffbd83d-6fae-43b5-99a7-931c070ca9de/figure.py",
+            "md5sum": null
+          },
+          {
+            "id": "d7b69cd0-5f59-4087-df6f-f6459c3efce5",
+            "deleted": false,
+            "filename": "main.py",
+            "mimeType": "text/x-python-script",
+            "size": 2377,
+            "dataURL": "file:/home/datawolf/data/files/d7/b6/9c/d7b69cd0-5f59-4087-df6f-f6459c3efce5/main.py",
+            "md5sum": null
+          },
+          {
+            "id": "4b6fff38-9fbd-488f-fc45-32ffba92f6c6",
+            "deleted": false,
+            "filename": "curve_fit.py",
+            "mimeType": "text/x-python-script",
+            "size": 2113,
+            "dataURL": "file:/home/datawolf/data/files/4b/6f/ff/4b6fff38-9fbd-488f-fc45-32ffba92f6c6/curve_fit.py",
+            "md5sum": null
+          },
+          {
+            "id": "934b1cd9-8f8e-4d4a-cb10-e9f32032d28d",
+            "deleted": false,
+            "filename": "Final_dis+region.xlsx",
+            "mimeType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "size": 101875,
+            "dataURL": "file:/home/datawolf/data/files/93/4b/1c/934b1cd9-8f8e-4d4a-cb10-e9f32032d28d/Final_dis+region.xlsx",
+            "md5sum": null
+          }
+        ]
+      },
+      "parameters": {
+        "f15d48f5-329d-429b-a984-c21f79fa43f1": "6919ef5e-1171-4ad4-b013-ee313f9bfb18",
+        "15669be3-412d-403a-81fc-f618d5e68c02": "4cc29167-b46a-499a-98a2-9550bf9127e3",
+        "0e65671c-576a-4682-b66f-287ba6c7a2f8": "ab3a21e3-f27b-461b-b3c8-1f40ccc0efe4",
+        "cfcf09b7-f512-4bf3-aa4f-149d91b05d3c": "730c0ff7-6875-43b7-df2a-3b0b5ae27c69",
+        "102d952f-d05d-4121-adb9-46ec2af31043": "2b164105-c2cf-44e2-b9b2-3574758bf189",
+        "90e87bfd-a823-44be-89d2-22a1d87ed617": "7b344edb-fc5c-41be-bbcd-09ffc2a6832c"
+      },
+      "inputs": {},
+      "outputs": {
+        "stdout": "3bdd7c82-4e8c-4e79-ec5a-200b0d320ff0",
+        "7f43ef48-92a2-41ce-d5be-5bdee0a984c3": "6e320fd8-de58-4605-d731-4e35cc8de8c1",
+        "stderr": "a185f5f4-cbe0-400b-85af-6596fd07dccd"
+      },
+      "outputsToolData": {
+        "stdout": null,
+        "7f43ef48-92a2-41ce-d5be-5bdee0a984c3": null,
+        "stderr": null
+      },
+      "inputsToolData": {}
+    }
+  ]
+}
