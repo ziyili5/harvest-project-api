@@ -1,3 +1,5 @@
+geoserver/
 venv/
 
 *.pyc
+*.tif
