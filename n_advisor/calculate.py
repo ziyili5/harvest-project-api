@@ -14,7 +14,11 @@ def cal(rot, fpr, cpr, dis, fer):
                 11: lsw region
                 12: central
                 13: southern Illinois
-    :param fer: ???
+    :param fer: fertilizer category
+                1: Anhydrous Ammonia (82%)
+                2: UAN (28%)
+                3: UAN (32%)
+                4: UAN (45%)
     :return:
     :yn: all N-yield responses curve under selected districts and rotations
              (each column represent one N-yield response for one site in one year)
@@ -77,11 +81,11 @@ def cal(rot, fpr, cpr, dis, fer):
     PMY = NRN / max(Yc) * 100  # % of Maximum Yield at MRTN Rate
     if fer == "Anhydrous Ammonia (82%)":
         nt = 0.82
-    elif fer == "UAN（28%）":
+    elif fer == 1:
         nt = 0.28
-    elif fer == "UAN（32%）":
+    elif fer == 2:
         nt = 0.32
-    elif fer == "UAN （45%）":
+    elif fer == 3:
         nt = 0.45
     else:
         nt = 0.21
