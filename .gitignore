@@ -1,6 +1,8 @@
+inputs/
 geoserver/
 venv/
 
+.env
 config.py
 gunicorn_conf.py
 *.pyc
