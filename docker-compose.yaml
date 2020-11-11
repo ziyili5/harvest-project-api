@@ -51,6 +51,7 @@ services:
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
+      SENTRY_DSN: ${SENTRY_DSN:-""}
     networks:
       - harvest
     ports:
