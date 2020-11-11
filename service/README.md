@@ -8,7 +8,7 @@ e.g. export DATABASE_URL=postgresql://harvest:harvest@localhost/harvest
 
 
 # Starting web service
-From a terminl and at the project folder (i.e. service), execute the following commands:
+From a terminal and at the project folder (i.e. service), execute the following commands:
 
     virtualenv --python=python3 venv
     source venv/bin/activate
@@ -18,38 +18,28 @@ From a terminl and at the project folder (i.e. service), execute the following c
     python api.py
 
 ## With Gunicorn
+
+Create `gunicorn_conf.py` (see `gunicorn_conf.example.py`) and start the server:
+
     gunicorn -c gunicorn_conf.py wsgi:app
 
-The web service will run by default at http://localhost:5000
-
-If you have issues installing gdal, try the following:
-
-pip install --global-option=build_ext --global-option="-I/usr/include/gdal" GDAL==`gdal-config --version`
+The web service will run by default at http://localhost:3000
 
 Example to get CLUs (CLU):
 
-    GET http://localhost:5000/api/CLUs/665516
+    GET http://localhost:3000/api/CLUs/665516
 
 Example to create a user (users):
 
-    POST http://localhost:5000/api/users
+    POST http://localhost:3000/api/users
+    {
+        "email": "user@example.com",
+        "first_name": "user",
+        "last_name" : "example"
+    }
 
-{
-"email": "user@example.com",
-"firstName":"user",
-"lastName" : "example"
-}
+Example to create a user field:
 
+    POST http://localhost:3000/api/user-field
 
-Example to create a userfield (userfield):
-
-    POST http://localhost:5000/api/userfield
-
-{
-"userid": "user@example.com",
-"clu":"665516",
-"cluname" : "Field-1",
-  "lat": "40.025",
-  "lon": "-88.275"
-}
-
+    {"user_id": "user@example.com", "clu": "665516", "clu_name": "Field-1"}

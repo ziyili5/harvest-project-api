@@ -1,5 +1,7 @@
 geoserver/
 venv/
 
+config.py
+gunicorn_conf.py
 *.pyc
 *.tif

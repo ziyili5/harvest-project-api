@@ -1,165 +1,164 @@
 import json
-import traceback
 from datetime import datetime
 
-import psycopg2
-import psycopg2.extras
-from flask import jsonify, request, abort
+from db import db
+from flask import abort
+from flask import jsonify
+from flask import make_response
+from flask import request
 from flask_restful import Resource
-from flask_sqlalchemy import SQLAlchemy
+from models import CLU
+from models import User
+from models import UserField
+from sqlalchemy import func
 
-from response import BasicResponse
-from models import User, UserField
-from utils import generate_geo_json, get_db
 
-postgresql = SQLAlchemy()
+def create_basic_response(status_code, message):
+    return make_response(
+        jsonify({"status_code": status_code, "message": message}), status_code
+    )
+
 
 class UserResource(Resource):
     """user login"""
 
     def post(self):
-
         # This could probably all be obtained from Kong X-Userinfo header when it's added
-        userjson = request.json
-        userquery = postgresql.session.query(User).filter_by(userid=userjson['email']).all()
+        user_json = request.json
+        user_query = db.session.query(User).filter_by(user_id=user_json["email"]).all()
         try:
-            if len(userquery) > 0:
-                user = userquery[0]
-                user.lastlogin = datetime.now()
-                postgresql.session.commit()
-                return BasicResponse.create_basic_response(200, "Welcome back, " + user.firstname)
+            if len(user_query) > 0:
+                user = user_query[0]
+                user.last_login = datetime.now()
+                db.session.commit()
+                return create_basic_response(200, f"Welcome back, {user.first_name}")
             else:
-
-                user = User(userid=userjson["email"], firstname=userjson["firstName"], lastname=userjson["lastName"],
-                            lastlogin=datetime.now())
-                postgresql.session.add(user)
-                postgresql.session.commit()
-                return BasicResponse.create_basic_response(200, "Hello new user, " + userjson["firstName"])
+                user = User(
+                    user_id=user_json["email"],
+                    first_name=user_json["first_name"],
+                    last_name=user_json["last_name"],
+                    last_login=datetime.now(),
+                )
+                db.session.add(user)
+                db.session.commit()
+                return create_basic_response(
+                    200, f"Hello new user, {user_json['first_name']}"
+                )
         except Exception as e:
-            status_code = 500
-            msg = "Cannot add user: " + str(e)
-            return BasicResponse.create_basic_response(status_code, msg)
+            return create_basic_response(500, f"Cannot add user: {str(e)}")
 
 
 class UserFieldResource(Resource):
     """add user field"""
 
     def post(self):
+        args = request.get_json()
         try:
             # Some of this can come from the X-Userinfo header
-            userid = request.get_json()['userid']
-            clu = request.get_json()['clu']
-            cluname = request.get_json()['cluname']
-            lat = request.get_json()['lat']
-            lon = request.get_json()['lon']
+            user_id = args["user_id"]
+            clu = args["clu"]
+            clu_name = args["clu_name"]
 
             # Should we add a user if they don't exist?
-            userfieldquery = postgresql.session.query(UserField).filter_by(userid=userid, clu=clu).all()
-            # user already add this field, update with new cluname
-            if len(userfieldquery) > 0:
-                userfield = userfieldquery[0]
-                userfield.cluname = cluname
-                userfield.lat = lat
-                userfield.lon = lon
-
+            user_field_query = (
+                db.session.query(UserField).filter_by(user_id=user_id, clu=clu).all()
+            )
+            # user already add this field, update with new clu_name
+            if len(user_field_query) > 0:
+                user_field = user_field_query[0]
+                user_field.clu_name = clu_name
             else:
-                # TODO: check if lat/lon within clu
-                userfield = UserField(userid=userid, clu=clu, cluname=cluname, lat=lat, lon=lon)
-                postgresql.session.add(userfield)
-            postgresql.session.commit()
-            return BasicResponse.create_basic_response(200, "Add CLU")
-        except Exception:
-            status_code = 403
-            msg = "Cannot add CLU: " + str(traceback.format_exc())
-            return BasicResponse.create_basic_response(status_code, msg)
+                user_field = UserField(user_id=user_id, clu=clu, clu_name=clu_name)
+                db.session.add(user_field)
+            db.session.commit()
+            return create_basic_response(200, "Add CLU")
+        except Exception as e:
+            return create_basic_response(403, f"Cannot add CLU: {e}")
 
     """get user field"""
 
     def get(self):
         all_args = request.args.to_dict()
-        if "userid" not in all_args:
-            return BasicResponse.create_basic_response(403, "You must provide userid.")
-        rows = postgresql.session.query(UserField).filter_by(userid=all_args['userid']).all()
+        user_id = all_args.get("user_id")
+        if not user_id:
+            return create_basic_response(403, "You must provide user_id.")
+        rows = db.session.query(UserField).filter_by(user_id=user_id).all()
         return jsonify([x.as_dict() for x in rows])
 
     """delete one user field"""
 
     def delete(self):
         all_args = request.args.to_dict()
-        if "userid" not in all_args:
-            return BasicResponse.create_basic_response(400, "You must provide userid.")
-        if "clu" not in all_args:
-            return BasicResponse.create_basic_response(400, "You must provide clu.")
+
+        user_id = all_args.get("user_id")
+        clu = all_args.get("clu")
+
+        if not user_id:
+            return create_basic_response(400, "You must provide user_id.")
+        if not clu:
+            return create_basic_response(400, "You must provide clu.")
+
         try:
-            userfield = postgresql.session.query(UserField).filter_by(userid=all_args['userid'], clu=all_args["clu"]).first()
-            if userfield:
-                postgresql.session.delete(userfield)
-                postgresql.session.commit()
-                msg = "Delete CLU: " + str(userfield.clu)
-                return BasicResponse.create_basic_response(200, msg)
+            user_field = (
+                db.session.query(UserField).filter_by(user_id=user_id, clu=clu).first()
+            )
+            if user_field:
+                db.session.delete(user_field)
+                db.session.commit()
+                return create_basic_response(200, f"Delete CLU: {user_field.clu}")
             else:
-                msg = "Cannot Delete CLU: Not Found"
-                return BasicResponse.create_basic_response(404, msg)
-        except Exception:
-            status_code = 403
-            msg = "Cannot delete CLU: " + str(traceback.format_exc())
-            return BasicResponse.create_basic_response(status_code, msg)
+                return create_basic_response(404, "Cannot Delete CLU: Not Found")
+        except Exception as e:
+            return create_basic_response(403, f"Cannot delete CLU: {e}")
 
 
 class CLUResource(Resource):
-    """get CLU from database."""
+    """
+    get CLU from database.
+    Query parameters:
+        - lat
+        - lon
+    """
 
     def get(self, clu_id=None):
-
-        # Query parameters:
-        # lat
-        # lon
         all_args = request.args.to_dict()
+
+        lat = all_args.get("lat")
+        long = all_args.get("long")
 
         # Check if either CLU ID or Lat and Long values are provided. If not, abort with 400 error
         # (Bad request).
-        if clu_id is None and ("lat" not in all_args or "lon" not in all_args):
+        if clu_id is None and (not lat or not long):
             abort(400)
-
-        db = get_db()
-        cur = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
         # If input CLU ID is not provided
         if clu_id is None:
-            # sql for getting CLU id with lat and lon
-            # the following is safe way to avoid sql injection attack
-            # refer to http://initd.org/psycopg/docs/usage.html#the-problem-with-the-query-parameters
-            sql = """
-            SELECT clu.gid, ST_AsGeoJSON(clu.geom) as geojson FROM clu WHERE
-            ST_Contains(clu.geom,ST_SetSRID(ST_MakePoint(%s,%s),4326)) and
-            st_intersects(clu.geom,ST_SetSRID(ST_MakePoint(%s,%s),4326));
-            """
-            data = (all_args['lon'], all_args['lat'], all_args['lon'], all_args['lat'])
+            point = (
+                db.session.query(
+                    func.ST_SetSRID(func.ST_MakePoint(long, lat), 4326).label("point")
+                )
+                .first()
+                .point
+            )
+            query = db.session.query(
+                CLU, CLU.geom.ST_ASGeoJSON().label("geojson")
+            ).filter(func.ST_Intersects(CLU.geom, point))
         # If input CLU ID is provided
         else:
-            # sql for getting CLU GeoJSON given CLU ID
-            # the following is safe way to avoid sql injection attack
-            # refer to http://initd.org/psycopg/docs/usage.html#the-problem-with-the-query-parameters
-            # SELECT clu.gid, ST_AsGeoJSON(clu.geom) as geojson FROM clu WHERE clu.gid = (665516);
-            sql = """
-            SELECT clu.gid, st_asgeojson(clu.geom) as geojson FROM clu WHERE clu.gid = (%s);
-
-            """
-            data = (clu_id,)
+            query = db.session.query(
+                CLU, CLU.geom.ST_ASGeoJSON().label("geojson")
+            ).filter(CLU.gid == clu_id)
 
         # Execute SQL command and get result rows
-        cur.execute(sql, data)
-        rows = cur.fetchall()
+        clu = query.first()
 
         # If there are no rows in the result, return resource not found error
-        if len(rows) == 0:
+        if not clu:
             abort(404)
 
         # Obtain specific fields from the result
-        clu_id = rows[0][0]
-        clu_geojson = rows[0][1]
+        clu_id = clu.CLU.gid
+        clu_geojson = json.loads(clu.geojson)
+        clu_geojson["properties"] = {"clu_id": clu_id}
 
-        # If soil information is not requested, return the current geoJSON
-        properties = {'clu_id': clu_id}
-        geojson = generate_geo_json(json.loads(clu_geojson), properties)
-        return jsonify(geojson)
+        return clu_geojson

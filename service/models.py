@@ -1,64 +1,63 @@
-from sqlalchemy import Column, Integer, String, Date, Float
-from sqlalchemy.schema import ForeignKey, PrimaryKeyConstraint
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.dialects.postgresql import DOUBLE_PRECISION
+from db import db
 from geoalchemy2 import Geometry
+from sqlalchemy import Column
+from sqlalchemy import Date
+from sqlalchemy import Integer
+from sqlalchemy import String
+from sqlalchemy.dialects.postgresql import DOUBLE_PRECISION
+from sqlalchemy.schema import ForeignKey
+from sqlalchemy.schema import PrimaryKeyConstraint
 
-Base = declarative_base()
 
-class User(Base):
-    __tablename__ = 'users'
+class User(db.Model):
+    __tablename__ = "users"
 
-    userid = Column(String(100), primary_key=True, nullable=False)
-    firstname = Column(String(100), nullable=False)
-    lastname = Column(String(100), nullable=False)
-    lastlogin = Column(Date, nullable=False)
+    user_id = Column(String(100), primary_key=True, nullable=False)
+    first_name = Column(String(100), nullable=False)
+    last_name = Column(String(100), nullable=False)
+    last_login = Column(Date, nullable=False)
 
-    def __init__(self, userid, firstname, lastname, lastlogin):
-        self.userid = userid
-        self.firstname = firstname
-        self.lastname = lastname
-        self.lastlogin = lastlogin
+    def __init__(self, user_id, first_name, last_name, last_login):
+        self.user_id = user_id
+        self.first_name = first_name
+        self.last_name = last_name
+        self.last_login = last_login
 
     def __repr__(self):
-        return '<User %r>' % (self.firstname + self.lastname)
+        return f"<User {self.first_name + self.last_name}>"
 
-class UserField(Base):
-    __tablename__ = "userfields"
 
-    userid = Column(String(100), ForeignKey("users.userid"), nullable=False)
+class UserField(db.Model):
+    __tablename__ = "user_fields"
+
+    user_id = Column(String(100), ForeignKey("users.user_id"), nullable=False)
     clu = Column(Integer, ForeignKey("clu.gid"), nullable=False)
-    cluname = Column(String(100), nullable=False)
-    lat = Column(Float, nullable=False)
-    lon = Column(Float, nullable=False)
+    clu_name = Column(String(100), nullable=False)
     __table_args__ = (
-        PrimaryKeyConstraint('userid', 'clu'),
+        PrimaryKeyConstraint("user_id", "clu"),
         {},
     )
 
-    def __init__(self, userid, clu, cluname, lat, lon):
-        self.userid = userid
+    def __init__(self, user_id, clu, clu_name):
+        self.user_id = user_id
         self.clu = clu
-        self.cluname = cluname
-        self.lat = lat
-        self.lon = lon
+        self.clu_name = clu_name
 
     def __repr__(self):
-        return "<UserField(userid='%s', clu='%s', cluname='%s', lat='%s', lon='%s')>" % (
-            self.userid, self.clu, self.cluname, self.lat, self.lon)
+        return f"<UserField(user_id='{self.user_id}', clu='{self.clu}', clu_name='{self.clu_name}')>"
 
     def as_dict(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
 
-class CLU(Base):
+class CLU(db.Model):
     __tablename__ = "clu"
 
     gid = Column(Integer, primary_key=True, nullable=False)
-    calcacres = Column(DOUBLE_PRECISION)
-    geom = Column(Geometry('POLYGON'))
+    calc_acres = Column(DOUBLE_PRECISION)
+    geom = Column(Geometry("MULTIPOLYGON"))
 
-    def __init__(self, gid, calcacres, geom):
+    def __init__(self, gid, calc_acres, geom):
         self.gid = gid
-        self.calcacres = calcacres
+        self.calc_acres = calc_acres
         self.geom = geom
