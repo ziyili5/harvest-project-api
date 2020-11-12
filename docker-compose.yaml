@@ -11,6 +11,7 @@ services:
       - 8080:8080
     volumes:
       - ./geoserver/data:/var/local/geoserver
+      - ./geoserver/exts:/var/local/geoserver-exts
     restart: unless-stopped
 
   datawolf:
@@ -19,7 +20,6 @@ services:
       dockerfile: datawolf/Dockerfile
     volumes:
       - datawolf:/home/datawolf/data
-      - ./n_advisor:/mnt/n_advisor
     depends_on:
       - postgres
     restart: unless-stopped
@@ -29,10 +29,10 @@ services:
       - DB_CLASS_NAME=${DB_CLASS_NAME:-org.postgresql.ds.PGSimpleDataSource}
       - DB_DIALECT=${DB_DIALECT:-org.hibernate.dialect.PostgreSQL9Dialect}
       - DB_SOURCE_URL=${DB_SOURCE_URL:-jdbc:postgresql://postgres/datawolf}
-      - DB_MAX_POOLSIZE=${DB_MAX_POOLSIZE:-100}
+      - DB_MAX_POOLSIZE=${DB_MAX_POOLSIZE:-10}
       - DB_IDLE_TIMEOUT=${DB_IDLE_TIMEOUT:-30000}
-      - DB_USER=${DB_USER:-datawolf}
-      - DB_PASSWORD=${DB_PASSWORD:-datawolf}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
       - ENGINE_STORELOGS=${ENGINE_STORELOGS:-false}
       - ENGINE_TIMEOUT=${ENGINE_TIMEOUT:-3600}
       - ENGINE_EXTRALOCALEXECUTOR=${ENGINE_EXTRALOCALEXECUTOR:-1}
@@ -44,18 +44,34 @@ services:
     networks:
       - harvest
 
-  postgres:
-    image: postgres:9.6
+  flask:
+    build:
+      context: ./service
     restart: unless-stopped
     environment:
-      POSTGRES_USER: ${DB_USER:-datawolf}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-datawolf}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      SENTRY_DSN: ${SENTRY_DSN}
     networks:
       - harvest
+    ports:
+      - 3000:3000
     volumes:
-      - postgres:/var/lib/postgresql/data
+      - ./service:/root/service
+
+  postgres:
+    image: postgis/postgis
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    networks:
+      - harvest
     ports:
       - "${POSTGRESQL_PORT:-15432}:5432"
+    volumes:
+      - ./postgres/init-user-db.sh:/docker-entrypoint-initdb.d/init-user-db.sh
+      - postgres:/var/lib/postgresql/data
 
 volumes:
   postgres:
