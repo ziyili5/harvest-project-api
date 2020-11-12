@@ -11,6 +11,7 @@ services:
       - 8080:8080
     volumes:
       - ./geoserver/data:/var/local/geoserver
+      - ./geoserver/exts:/var/local/geoserver-exts
     restart: unless-stopped
 
   datawolf:
@@ -19,7 +20,6 @@ services:
       dockerfile: datawolf/Dockerfile
     volumes:
       - datawolf:/home/datawolf/data
-      - ./n_advisor:/mnt/n_advisor
     depends_on:
       - postgres
     restart: unless-stopped
