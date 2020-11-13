@@ -1,10 +1,29 @@
 version: "3.5"
 
 services:
+  keycloak:
+    image: jboss/keycloak
+    environment:
+      - DB_VENDOR=POSTGRES
+      - DB_ADDR=postgres
+      - DB_DATABASE=keycloak
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - KEYCLOAK_USER=${KEYCLOAK_USER}
+      - KEYCLOAK_PASSWORD=${KEYCLOAK_PASSWORD}
+      - KEYCLOAK_FRONTEND_URL=${KEYCLOAK_FRONTEND_URL}
+    networks:
+      - harvest
+    ports:
+      - 8000:8080
+      - 8443:8443
+    restart: unless-stopped
+
   geoserver:
     image: oscarfonts/geoserver:latest
-    env_file:
-      - .env
+    environment:
+      - GEOSERVER_ADMIN_USER=${GEOSERVER_ADMIN_USER}
+      - GEOSERVER_ADMIN_PASSWORD=${GEOSERVER_ADMIN_PASSWORD}
     networks:
       - harvest
     ports:
@@ -49,9 +68,9 @@ services:
       context: ./service
     restart: unless-stopped
     environment:
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      SENTRY_DSN: ${SENTRY_DSN}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - SENTRY_DSN=${SENTRY_DSN}
     networks:
       - harvest
     ports:
@@ -63,8 +82,8 @@ services:
     image: postgis/postgis
     restart: unless-stopped
     environment:
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
     networks:
       - harvest
     ports:
