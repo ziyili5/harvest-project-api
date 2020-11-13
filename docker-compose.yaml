@@ -24,6 +24,7 @@ services:
     environment:
       - GEOSERVER_ADMIN_USER=${GEOSERVER_ADMIN_USER}
       - GEOSERVER_ADMIN_PASSWORD=${GEOSERVER_ADMIN_PASSWORD}
+      - GEOSERVER_CSRF_WHITELIST=${GEOSERVER_CSRF_WHITELIST:-"*"}
     networks:
       - harvest
     ports:
