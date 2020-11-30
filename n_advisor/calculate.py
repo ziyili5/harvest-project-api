@@ -34,7 +34,7 @@ def cal(rot, fpr, cpr, dis, fer):
     :FM: Fertilizer at MRTN Rate
     :FC: Fertilizer Cost at MRTN Rate
     """
-    xn = np.linspace(0, 250, 1000)
+    xn = np.linspace(0, 300, 1000)
     df = pd.read_excel("./data/Final_dis+region.xlsx", sheet_name=f"{rot}_d{dis}",)
 
     yn = np.zeros((1000, len(df)))
@@ -51,10 +51,9 @@ def cal(rot, fpr, cpr, dis, fer):
         MaxN = df.iloc[i]["MaxN"]
 
         for j in range(len(xn)):
-            if lx == "QP" or lx == "Q":  # quandratic-plateau
-                if B / (-2 * A) < MaxN:
-                    x0 = B / (-2 * A)
-                else:
+            if lx == "QP":  # quandratic-plateau
+                x0 = B / (-2 * A)
+                if x0>=MaxN:
                     x0 = MaxN
                 if xn[j] <= x0:
                     yn[j, i] = A * xn[j] ** 2 + B * xn[j] + C
@@ -69,16 +68,23 @@ def cal(rot, fpr, cpr, dis, fer):
                     yn[j, i] = B * MaxN + C
         En[i] = xn[np.argmax(yn[:, i], axis=0)]
         Opy[i] = max(yn[:, i])
+
     Yc = (yn.mean(axis=1) - yn.mean(axis=1)[0]) * cpr  # Crop benefits
     Yf = xn * fpr  # Fertilizer cost
     Yrtn = Yc - Yf  # Return to N
-    Ns = yn.shape[1]  # number of sites
 
+    Ns = yn.shape[1]  # number of sites
     MRTN_rate = xn[np.argmax(Yrtn, axis=0)]  # MRTN rate
+
+    YN=yn.mean(axis=1)
+    Y_mrtn=YN[np.argmax(Yrtn, axis=0)]#Crop yield at MRTN rate
+    PMY=Y_mrtn/max(YN) # % of Maximum Yield at MRTN Rate
+
     NRN = Yrtn[np.argmax(Yrtn, axis=0)]  # Net return to N at MRTN Rate
     Rg_min = min(xn[np.where(Yrtn >= NRN - 1)])  # Profitable N rate range
     Rg_max = max(xn[np.where(Yrtn >= NRN - 1)])  # Profitable N rate range
-    PMY = NRN / max(Yc) * 100  # % of Maximum Yield at MRTN Rate
+
+
     if fer == "Anhydrous Ammonia (82%)":
         nt = 0.82
     elif fer == 1:
