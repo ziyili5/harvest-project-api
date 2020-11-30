@@ -1,7 +1,6 @@
 import numpy as np
 import pandas as pd
-
-
+S
 def cal(rot, fpr, cpr, dis, fer):
     """
     Calculate the MRTN results and give input (fertilizer and corn price, rotation and district)
